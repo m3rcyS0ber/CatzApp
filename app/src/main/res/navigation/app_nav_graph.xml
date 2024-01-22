@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_nav_graph"
-    app:startDestination="@id/catFragment"
-    xmlns:tools="http://schemas.android.com/tools">
+    app:startDestination="@id/catFragment">
 
     <fragment
         android:id="@+id/catFragment"
         android:name="dev.keikem.catzapp.screens.fragment.CatFragment"
-        tools:layout="@layout/fragment_cat"/>
+        tools:layout="@layout/fragment_cat">
+
+        <action
+            android:id="@+id/toNextFragment"
+            app:destination="@id/dogFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/dogFragment"
+        android:name="dev.keikem.catzapp.screens.fragment.DogFragment"
+        tools:layout="@layout/fragment_cat" />
 
 </navigation>

@@ -17,7 +17,7 @@ import javax.net.ssl.HttpsURLConnection
 //Класс, репрезентующии получение данных с бека и преобразование в то с чем мы работаем, а также сохранение в базу
 class GimmeACatRemoteUseCase {
 
-    fun gimme(context: Context) : String {
+    fun gimme() : String {
         var urlConnection: HttpsURLConnection? = null
         val imageUrl: String
         try {
@@ -31,8 +31,8 @@ class GimmeACatRemoteUseCase {
             val typeAlias = object : TypeToken<List<RemoteCat>>() {}.type
             val convertedResult: List<RemoteCat> = Gson().fromJson(result, typeAlias)
             imageUrl = convertedResult[0].url
-            val database = DatabaseHolder.provideDb(context)
-            database.catDao().set(LocalCat(id = UUID.randomUUID().toString(), imageUrl = imageUrl))
+           // val database = DatabaseHolder.provideDb(context)
+           // database.catDao().set(LocalCat(id = UUID.randomUUID().toString(), imageUrl = imageUrl))
 
         } finally {
             urlConnection?.disconnect()

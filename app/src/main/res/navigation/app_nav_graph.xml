@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/catFragment"
-        android:name="dev.keikem.catzapp.screens.fragment.CatFragment"
+        android:name="dev.keikem.catzapp.screens.fragment.cat.CatFragment"
         tools:layout="@layout/fragment_cat">
 
         <action
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/dogFragment"
-        android:name="dev.keikem.catzapp.screens.fragment.DogFragment"
+        android:name="dev.keikem.catzapp.screens.fragment.dog.DogFragment"
         tools:layout="@layout/fragment_cat" />
 
 </navigation>

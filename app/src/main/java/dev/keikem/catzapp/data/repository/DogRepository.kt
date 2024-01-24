@@ -1,7 +1,10 @@
-package dev.keikem.catzapp.domain.usecases
+package dev.keikem.catzapp.data.repository
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import dev.keikem.catzapp.DatabaseHolder
+import dev.keikem.catzapp.data.local.Database
+import dev.keikem.catzapp.data.local.entity.LocalDog
 import dev.keikem.catzapp.data.remote.RemoteDog
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -9,9 +12,11 @@ import java.net.URL
 import java.util.stream.Collectors
 import javax.net.ssl.HttpsURLConnection
 
-class GimmeADogUseCase {
+class DogRepository {
 
-    fun gimme() : String {
+    private val database: Database? = DatabaseHolder.provideDb()
+
+    fun loadFromRemote(): String {
         var urlConnection: HttpsURLConnection? = null
         val imageUrl: String
         try {
@@ -25,13 +30,16 @@ class GimmeADogUseCase {
             val typeAlias = object : TypeToken<RemoteDog>() {}.type
             val convertedResult: RemoteDog = Gson().fromJson(result, typeAlias)
             imageUrl = convertedResult.message
-            // val database = DatabaseHolder.provideDb(context)
-            // database.catDao().set(LocalCat(id = UUID.randomUUID().toString(), imageUrl = imageUrl))
-
         } finally {
             urlConnection?.disconnect()
         }
 
         return imageUrl
+    }
+
+    fun loadFromLocal(): String? = database?.dogDao()?.get()?.imageUrl
+
+    fun saveToLocal(dog: LocalDog) {
+        database?.dogDao()?.set(dog)
     }
 }

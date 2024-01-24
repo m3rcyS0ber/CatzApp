@@ -1,4 +1,4 @@
-package dev.keikem.catzapp.screens.fragment
+package dev.keikem.catzapp.screens.fragment.cat
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,14 +11,21 @@ class CatViewModel : ViewModel() {
     private val gimmeACatRemoteUseCase: GimmeACatRemoteUseCase by lazy { GimmeACatRemoteUseCase() }
     private val gimmeACatLocalUseCase: GimmeACatLocalUseCase by lazy { GimmeACatLocalUseCase() }
 
-    init {
-        load()
-    }
-
     private var _imageUrl: MutableLiveData<String> = MutableLiveData("")
     val imageUrl: LiveData<String> = _imageUrl
 
-    private fun load() {
+    init {
+        loadFromDatabase()
+    }
+
+    private fun loadFromDatabase() {
+        Thread {
+            val im = gimmeACatLocalUseCase.gimme()
+            im?.let { image -> _imageUrl.postValue(image) }
+        }.start()
+    }
+
+    fun loadFromRemote() {
         //Thread - отдельный поток выполнения, он отвечает за то где будет выполнятся операция
         Thread {
             Thread.sleep(5000)

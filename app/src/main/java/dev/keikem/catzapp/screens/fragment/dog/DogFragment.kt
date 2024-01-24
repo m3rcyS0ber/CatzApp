@@ -1,8 +1,6 @@
-package dev.keikem.catzapp.screens.fragment
+package dev.keikem.catzapp.screens.fragment.dog
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -17,19 +15,13 @@ import coil.load
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import dev.keikem.catzapp.R
 
-//Фрагмент, показывающии котика
-class CatFragment : Fragment(R.layout.fragment_cat) {
+class DogFragment : Fragment(R.layout.fragment_cat), LifecycleEventObserver {
 
-    private object ExampleObserver : LifecycleEventObserver {
-        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            when (event) {
-                Lifecycle.Event.ON_START -> {
+    private var viewModel: DogViewModel? = null
 
-                }
-
-                else -> Unit
-            }
-        }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,18 +29,8 @@ class CatFragment : Fragment(R.layout.fragment_cat) {
 
         val image = view.findViewById<ImageView>(R.id.image)
         val button = view.findViewById<Button>(R.id.button)
+        val buttonLoad = view.findViewById<Button>(R.id.buttonLoad)
         val progress = view.findViewById<CircularProgressIndicator>(R.id.progress)
-
-        var viewModel: CatViewModel? = null
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED))
-            viewModel = ViewModelProvider(this)[CatViewModel::class.java]
-
-
-      //  val handler = Handler(Looper.getMainLooper())
-      //  val runnable = {
-      //      Thread.sleep(3000)
-     //   }
-      //  handler.post(runnable)
 
         viewModel?.imageUrl?.observe(viewLifecycleOwner) { url ->
             if (url.isNotEmpty()) {
@@ -57,11 +39,26 @@ class CatFragment : Fragment(R.layout.fragment_cat) {
             }
         }
 
-        button.setOnClickListener {
-            Navigation.findNavController(requireActivity(), R.id.appNavHostFragment)
-                .navigate(R.id.toNextFragment)
+        buttonLoad.text = "Load Dog"
+        button.text = "Navigate Back"
+
+        buttonLoad.setOnClickListener {
+            progress.isVisible = true
+            viewModel?.loadFromRemote()
         }
 
+        button.setOnClickListener {
+            Navigation.findNavController(requireActivity(), R.id.appNavHostFragment).popBackStack()
+        }
     }
 
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when (event) {
+            Lifecycle.Event.ON_CREATE -> {
+                viewModel = ViewModelProvider(this)[DogViewModel::class.java]
+            }
+
+            else -> Unit
+        }
+    }
 }

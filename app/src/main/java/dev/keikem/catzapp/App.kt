@@ -6,15 +6,20 @@ import androidx.room.Room
 import dev.keikem.catzapp.data.local.Database
 
 //Класс, репрезентирующий само приложение
-class App : Application()
+class App : Application() {
 
+    override fun onCreate() {
+        super.onCreate()
+        DatabaseHolder.createDatabase(applicationContext)
+    }
+}
 
 //Обьект, отвечающии за создание/хранение бд
 object DatabaseHolder {
 
     private var _database: Database? = null
 
-    fun provideDb(context: Context) : Database {
+    fun createDatabase(context: Context) {
         if (_database == null) {
             _database = Room.databaseBuilder(
                 context,
@@ -22,7 +27,8 @@ object DatabaseHolder {
                 "database.db"
             ).build()
         }
-        return _database as Database
     }
+
+    fun provideDb(): Database? = _database
 
 }

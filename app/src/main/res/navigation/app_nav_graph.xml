@@ -7,18 +7,25 @@
 
     <fragment
         android:id="@+id/catFragment"
-        android:name="dev.keikem.catzapp.screens.fragment.cat.CatFragment"
+        android:name="dev.keikem.catzappedit.screens.fragment.cat.CatFragment"
         tools:layout="@layout/fragment_cat">
 
         <action
             android:id="@+id/toNextFragment"
             app:destination="@id/dogFragment" />
-
+        <action
+            android:id="@+id/toCounterFragment"
+            app:destination="@id/counterFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/dogFragment"
-        android:name="dev.keikem.catzapp.screens.fragment.dog.DogFragment"
+        android:name="dev.keikem.catzappedit.screens.fragment.dog.DogFragment"
         tools:layout="@layout/fragment_cat" />
+
+    <fragment
+        android:id="@+id/counterFragment"
+        android:name="dev.keikem.catzappedit.screens.fragment.counter.CounterFragment"
+        tools:layout="@layout/fragment_counter" />
 
 </navigation>

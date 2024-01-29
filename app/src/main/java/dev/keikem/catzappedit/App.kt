@@ -3,7 +3,15 @@ package dev.keikem.catzappedit
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.google.gson.Gson
+import dev.keikem.catzappedit.data.api.CatsApi
+import dev.keikem.catzappedit.data.api.DogsApi
 import dev.keikem.catzappedit.data.local.Database
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
+import java.util.concurrent.TimeUnit
 
 //Класс, репрезентирующий само приложение
 class App : Application() {
@@ -31,4 +39,27 @@ object DatabaseHolder {
 
     fun provideDb(): Database? = _database
 
+}
+object NetworkHolder {
+
+    private val gson: Gson = Gson()
+
+    private val okHttpClient = OkHttpClient.Builder().connectTimeout(10L, TimeUnit.SECONDS).build()
+
+    private val catRetrofit =
+        Retrofit.Builder().baseUrl("https://api.thecatapi.com/")
+            .client(okHttpClient)
+            .addConverterFactory(
+                GsonConverterFactory.create(gson)
+            ).build()
+
+    private val dogRetrofit = Retrofit.Builder().baseUrl("https://dog.ceo/")
+        .client(okHttpClient)
+        .addConverterFactory(
+            GsonConverterFactory.create(gson)
+        ).build()
+
+    val provideCatApi: CatsApi = catRetrofit.create()
+
+    val provideDogApi: DogsApi = dogRetrofit.create()
 }
